@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+kafka-python-ng
+pymongo
+psycopg2-binary
+sqlalchemy
+streamlit
+pandas
+requests
+duckdb
+pyarrow

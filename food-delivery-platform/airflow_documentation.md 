@@ -1,0 +1,27 @@
+# Experiment 12: Workflow Orchestration Using Apache Airflow
+
+## DAG Details
+- DAG ID: food_delivery_etl
+- Schedule: Every 15 minutes
+- Cron expression: */15 * * * *
+
+## Tasks
+1. validate_clean_load
+2. data_quality_report
+
+## Purpose
+Automates ETL validation and data quality reporting.
+
+## Execution Results
+The Airflow interface displayed 11 successful DAG runs.
+Both tasks succeeded in the observed run.
+
+The validation task reported 0 staged orders in the
+captured run. The quality report showed 563 good
+records and 40 rejected records from the earlier ETL results.
+
+## Screenshots
+- airflow_graph.png
+- airflow_details.png
+- airflow_validate_clean_load.png
+- airflow_data_quality_report.png

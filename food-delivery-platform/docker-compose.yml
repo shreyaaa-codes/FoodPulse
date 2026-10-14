@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fooddb
+    ports: ["5433:5432"]          # 5433 on your PC so it won't clash with a local Postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./sql/02_views.sql:/docker-entrypoint-initdb.d/02_views.sql
+
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: [mongodata:/data/db]
+
+  redpanda:
+    image: redpandadata/redpanda:v24.1.1
+    command:
+      - redpanda
+      - start
+      - --mode
+      - dev-container
+      - --smp
+      - "1"
+      - --memory
+      - 512M
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://localhost:19092
+    ports: ["19092:19092"]
+
+  # Day 3: start with  docker compose --profile airflow up -d airflow
+  airflow:
+    image: apache/airflow:2.9.3
+    profiles: ["airflow"]
+    command: standalone
+    depends_on: [postgres]
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      PG_DSN: "host=postgres port=5432 dbname=fooddb user=postgres password=postgres"
+    ports: ["8080:8080"]
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - .:/opt/airflow/project
+
+volumes:
+  pgdata:
+  mongodata:
