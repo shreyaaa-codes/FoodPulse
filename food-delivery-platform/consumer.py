@@ -16,6 +16,10 @@ consumer = KafkaConsumer(
     bootstrap_servers=KAFKA_BROKER,
     group_id="order-consumer",
     auto_offset_reset="earliest",
+    enable_auto_commit=False,
+    session_timeout_ms=10000,
+    request_timeout_ms=30000,
+    api_version_auto_timeout_ms=5000,
     value_deserializer=lambda m: json.loads(m.decode("utf-8")),
 )
 raw = MongoClient(MONGO_URI)["food_delivery"]["raw_orders"]
